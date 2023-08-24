@@ -2,23 +2,35 @@ import { Transaction } from "@/types/transaction";
 import { useState } from "react";
 
 interface Props {
-  listEntry?: Transaction[];
+  list: Transaction[];
+  setList: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  showModal: () => void;
 }
-export const Modal = () => {
+export const Modal = ({ showModal, list, setList }: Props) => {
   const [entry, setEntry] = useState("");
   const [valueEntry, setValueEntry] = useState("");
   const [date, setDate] = useState("");
 
   const handleAddButton = () => {
-    const data = [entry, valueEntry, date];
-    console.log(data);
+    setList((prev) => [
+      ...prev,
+      {
+        entry,
+        value: valueEntry,
+        date,
+      },
+    ]);
+  };
+
+  const closeModal = () => {
+    showModal();
   };
 
   return (
-    <div className="w-full h-full bg-black/40 absolute flex justify-center items-center px-2">
+    <div className="w-full h-full bg-black/40 absolute top-0 flex justify-center items-center px-2">
       <div className="max-w-5xl bg-[#f0f2f5] rounded-md p-3">
         <h1 className="font-bold text-lg mb-4 uppercase">Nova Transação</h1>
-        <form className="flex flex-col">
+        <form className="flex flex-col" onSubmit={handleAddButton}>
           <input
             placeholder="Descrição"
             maxLength={20}
@@ -48,16 +60,15 @@ export const Modal = () => {
           <div className="flex justify-between items-center gap-2 pt-4 ">
             <button
               className="w-full border-2 border-red-500 px-4 py-2 rounded text-red-500 hover:opacity-60"
-              // onClick={handleClose}
+              onClick={closeModal}
             >
               Cancelar
             </button>
-            <button
+            <input
+              type="submit"
               className="w-full bg-green-500 px-4 py-2 rounded text-white border-green-500 border-2 hover:opacity-70"
-              onClick={handleAddButton}
-            >
-              Salvar
-            </button>
+              value="Salvar"
+            />
           </div>
         </form>
       </div>
